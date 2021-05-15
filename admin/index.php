@@ -23,7 +23,7 @@ if (!empty($_GET['pageno'])) {
   $pageno = 1;
 }
 
-$numOfrecs  = 3;
+$numOfrecs  = 5;
 $offset = ($pageno - 1) * $numOfrecs;
 
 if (empty($_POST['search'])) {
@@ -38,13 +38,13 @@ if (empty($_POST['search'])) {
   $result = $stmt->fetchAll();
 } else {
   $searchkey = $_POST['search'];
-  $stmt = $pdo->prepare("SELECT * FROM products WHERE title LIKE '%$searchkey%' ORDER BY id DESC");
+  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchkey%' ORDER BY id DESC");
   $stmt->execute();
   $rawResult = $stmt->fetchAll();
 
   $total_pages = ceil(count($rawResult) / $numOfrecs);
 
-  $stmt = $pdo->prepare("SELECT * FROM products WHERE title LIKE '%$searchkey%' ORDER BY id DESC LIMIT $offset,$numOfrecs ");
+  $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchkey%' ORDER BY id DESC LIMIT $offset,$numOfrecs ");
   $stmt->execute();
   $result = $stmt->fetchAll();
 }
@@ -64,32 +64,47 @@ if (empty($_POST['search'])) {
 
       <!-- /.card-header -->
       <div class="card-body">
-        <a href="add.php" class="btn btn-success">New product</a><br /><br />
+        <a href="product_add.php" class="btn btn-success">Create New Product</a><br /><br />
 
         <table class="table table-bordered">
           <thead>
             <tr>
               <th style="width: 10px">ID</th>
-              <th style="width: 250px">Title</th>
-              <th>Content</th>
+              <th style="width: 250px">Name</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>In Stock</th>
+              <th>Price</th>
               <th style="width: 150px">Action</th>
             </tr>
           </thead>
           <tbody>
             <?php
 
-            if ($result) {
+            if ($result)
+            {
               $i = 1;
-              foreach ($result as $value) {
+              foreach ($result as $value)
+              {
             ?>
+            <?php 
+              $catStmt = $pdo->prepare("SELECT * FROM categories WHERE id=".$value['category_id']);
+              $catStmt->execute();
+              $catResult = $stmt->fetchAll();
+            ?>
+
+
                 <tr>
                   <td><?php echo $i; ?></td>
-                  <td><?php echo escape($value['title']); ?></td>
-                  <td style="height: 20px;"><?php echo escape($value['content']); ?></td>
+                  <td><?php echo escape($value['name']); ?></td>
+                  <td style="height: 20px;"><?php echo escape(substr($value['description'],0,30)); ?></td>
+                  <td><?php echo escape($value['name']); ?> </td>
+                  <td><?php echo escape($value['quantity']); ?> </td>
+                  <td><?php echo escape($value['price']); ?> </td>
                   <td>
                     <div class="btn-group">
-                      <div class="container"> <a href="edit.php?id=<?php echo escape($value['id']);  ?>" class="btn btn-primary">Edit</a> </div>
-                      <div class="container"> <a href="delete.php?id=<?php echo escape($value['id']);  ?>" onclick="return confirm('Are you sure you want to delete this item')" class="btn btn-danger">Delete</a></div>
+                      <div class="container"> <a href="product_edit.php?id=<?php echo escape($value['id']);  ?>" class="btn btn-primary">Edit</a> </div>
+                      <div class="container"> <a href="product_delete.php?id=<?php echo escape($value['id']);  ?>" onclick="return confirm('Are you sure you want to delete this item')" class="btn btn-danger">Delete</a></div>
                     </div>
                   </td>
                 </tr>
@@ -109,7 +124,7 @@ if (empty($_POST['search'])) {
           <li class="page-item">
             <a class="page-link" href="?pageno=1">First</a>
           </li>
-          <li class="page-item  <?php if ($pageno <= 1) {
+          <li class="page-item  <?php if ($pageno <= 1){
                                   echo 'disabled';
                                 } ?>">
             <a class="page-link" href="<?php if ($pageno <= 1) {

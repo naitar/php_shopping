@@ -25,28 +25,30 @@ if (!empty($_GET['pageno'])) {
 $numOfrecs  = 3;
 $offset = ($pageno - 1) * $numOfrecs;
 
-if (empty($_POST['search'])) {
-    $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id DESC");
-    $stmt->execute();
-    $rawResult = $stmt->fetchAll();
+// if (empty($_POST['search'])) {
+//     $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id DESC");
+//     $stmt->execute();
+//     $rawResult = $stmt->fetchAll();
 
-    $total_pages = ceil(count($rawResult) / $numOfrecs);
+//     $total_pages = ceil(count($rawResult) / $numOfrecs);
 
-    $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id DESC LIMIT $offset,$numOfrecs ");
+//     $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id DESC LIMIT $offset,$numOfrecs ");
+//     $stmt->execute();
+//     $result = $stmt->fetchAll();
+// } else {
+//     $searchkey = $_POST['search'];
+//     $stmt = $pdo->prepare("SELECT * FROM categories WHERE name LIKE '%$searchkey%' ORDER BY id DESC");
+//     $stmt->execute();
+//     $rawResult = $stmt->fetchAll();
+
+    // $total_pages = ceil(count($rawResult) / $numOfrecs);
+
+    $stmt = $pdo->prepare("SELECT * FROM sale_orders  ORDER BY id DESC LIMIT $offset,$numOfrecs ");
     $stmt->execute();
     $result = $stmt->fetchAll();
-} else {
-    $searchkey = $_POST['search'];
-    $stmt = $pdo->prepare("SELECT * FROM categories WHERE name LIKE '%$searchkey%' ORDER BY id DESC");
-    $stmt->execute();
-    $rawResult = $stmt->fetchAll();
 
-    $total_pages = ceil(count($rawResult) / $numOfrecs);
-
-    $stmt = $pdo->prepare("SELECT * FROM categories WHERE name LIKE '%$searchkey%' ORDER BY id DESC LIMIT $offset,$numOfrecs ");
-    $stmt->execute();
-    $result = $stmt->fetchAll();
-}
+    $total_pages = ceil(count($result) / $numOfrecs);
+// }
 
 ?>
 
@@ -57,40 +59,39 @@ if (empty($_POST['search'])) {
         <!-- table -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Catetories listing</h3>
+                <h3 class="card-title">Sale Order listing</h3>
             </div>
 
 
             <!-- /.card-header -->
             <div class="card-body">
-                <a href="cat_add.php" class="btn btn-success">New Category</a><br /><br />
+                <!-- <a href="cat_add.php" class="btn btn-success">New Category</a><br /><br /> -->
 
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th style="width: 10px">ID</th>
-                            <th style="width: 250px">Name</th>
-                            <th>Description</th>
+                            <th style="width: 8%">#</th>
+                            <th>User</th>
+                            <th>Total Price</th>
+                            <th>Order Date</th>
                             <th style="width: 150px">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-
+                        <?php                
                         if ($result) {
                             $i = 1;
-                            foreach ($result as $value) {
+                            foreach ($result as $value) {                                                                  
+                            $UserStmt = $pdo->prepare("SELECT * FROM users WHERE id=".$value['user_id']);                            
+                            $UserStmt->execute();
+                            $UserResult = $UserStmt->fetchAll();                                
                         ?>
                                 <tr>
                                     <td><?php echo $i; ?></td>
-                                    <td><?php echo escape($value['name']); ?></td>
-                                    <td style="height: 20px;"><?php echo escape(substr($value['description'],0,50)); ?></td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <div class="container"> <a href="cat_edit.php?id=<?php echo escape($value['id']);  ?>" class="btn btn-primary">Edit</a> </div>
-                                            <div class="container"> <a href="cat_delete.php?id=<?php echo escape($value['id']);  ?>" onclick="return confirm('Are you sure you want to delete this item')" class="btn btn-danger">Delete</a></div>
-                                        </div>
-                                    </td>
+                                    <td><?php echo escape($UserResult[0]['name']); ?></td>
+                                    <td style="height: 20px;"><?php echo escape(substr($value['total_price'],0,50)); ?></td>
+                                    <td> <?php echo escape(date("d-m-Y",strtotime($value['order_date']))); ?></td>
+                                    <td><div class="container"> <a href="order_detail.php?id=<?php echo escape($value['id']);  ?>" class="btn btn-primary">View</a> </div></td>
                                 </tr>
                         <?php
                                 $i++;

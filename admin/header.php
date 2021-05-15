@@ -50,14 +50,25 @@
       >
 
       <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
-        <div class="input-group input-group-sm">
-          <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-navbar" type="submit">
-              <i class="fas fa-search"></i>
-            </button>
+      <?php
+        // check search box show or hide;
+        if($page == 'order_list.php' || $page == 'order_detail.php'){
+
+        }
+        else{ ?>
+
+          <div class="input-group input-group-sm">
+            <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+            <div class="input-group-append">
+              <button class="btn btn-navbar" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
           </div>
-        </div>
+      <?php  
+        }
+      ?>
+
       </form>
 
 
@@ -108,6 +119,13 @@
               <a href="userlist.php" class="nav-link">
                 <i class="nav-icon fa fa-user"></i>
                 <p>Users</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="order_list.php" class="nav-link">
+                <i class="nav-icon fa fa-table"></i>
+                <p>Order</p>
               </a>
             </li>
 

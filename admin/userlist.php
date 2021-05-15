@@ -58,7 +58,7 @@ if (empty($_POST['search'])) {
     <!-- table -->
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Blog listing</h3>
+        <h3 class="card-title">User listing</h3>
       </div>
 
 
