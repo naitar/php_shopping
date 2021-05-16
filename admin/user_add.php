@@ -9,33 +9,42 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
 
 include('header.php'); 
 
-    if($_POST){
-        
-        if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
-            if(empty($_POST['name'])){
+    if($_POST)
+    {        
+        if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) || strlen($_POST['password']) < 4) 
+        {
+            if(empty($_POST['name']))
+            {
                 $nameError = 'Name  is required';
             }
-            if(empty($_POST['email'])){
+            if(empty($_POST['email']))
+            {
                 $emailError = 'Email  is required';
             }
 
-            if(strlen($_POST['password']) < 4 ){
+            if(strlen($_POST['password']) < 4 )
+            {
                 $passwordError = 'Password should be 4 charater at least';
             }
 
-            if(empty($_POST['password'])){
+            if(empty($_POST['password']))
+            {
                 $passwordError = 'Password  is required';
             }
-
-        }else{
+        }
+        else
+        {
             $name = $_POST['name'];
             $email = $_POST['email'];
             $password =password_hash($_POST['password'],PASSWORD_DEFAULT);
             
-            if(empty($_POST['role'])){
-            $role = 0;
-            }else{
-            $role = 1;
+            if(empty($_POST['role']))
+            {
+                $role = 0;
+            }
+            else
+            {
+                $role = 1;
             }
 
             $stmt = $pdo -> prepare("SELECT * FROM users where email=:email");
@@ -43,25 +52,23 @@ include('header.php');
             $stmt -> execute();
             $user = $stmt -> fetch(PDO::FETCH_ASSOC);
             
-            if($user){
-            echo "<script>alert('Email Duplicated')</script>";
-            
-            }else{
-            $stmt =  $pdo -> prepare("INSERT INTO users (name,email,password,role) VALUES (:name,:email,:password,:role)");
-            $result =  $stmt-> execute(
-                array(':name'=>$name,':email'=>$email,':password'=> $password,':role' => $role)
-            );
-            if($result){
-                echo  "<script>alert('Successfully added new user');window.location.href='userlist.php'</script>";
+            if($user)
+            {
+            echo "<script>alert('Email Duplicated')</script>";          
             }
-
+            else
+            {
+                $stmt = $pdo -> prepare("INSERT INTO users (name,email,password,role) VALUES (:name,:email,:password,:role)");
+                $result =  $stmt-> execute(
+                    array(':name'=>$name,':email'=>$email,':password'=> $password,':role' => $role)
+                );
+                if($result)
+                {
+                    echo  "<script>alert('Successfully added new user');window.location.href='userlist.php'</script>";
+                }
             }
-
-        }        
-        
+        }                
     }
-
-
 ?>
 
 <!-- Main content -->
@@ -78,7 +85,7 @@ include('header.php');
                 <form action="user_add.php" method="POST" enctype="multipart/form-data">
                 <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
                     <div class="form-group">
-                        <label for="name" name="name"> Name</label><p style="color:red;display:inline;"><?php echo empty($nameError) ? '' : '*'.$nameError ?></p>
+                        <label for="name" name="name"> Name</label><p style="*-+;display:inline;"><?php echo empty($nameError) ? '' : '*'.$nameError ?></p>
                         <input type="name" class="form-control" name="name" >
                     </div>
 

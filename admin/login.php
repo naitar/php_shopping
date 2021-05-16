@@ -64,7 +64,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your blog</p>
+      <p class="login-box-msg">Sign in to start your shopping</p>
 
       <form action="login.php" method="post">
       <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
@@ -96,18 +96,7 @@
           <!-- /.col -->
         </div>
       </form>
-
-
-      <!-- /forgot -->
-
-      <!-- <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
-      </p>
-      <p class="mb-0">
-        <a href="register.html" class="text-center">Register a new membership</a>
-      </p> -->
-
-   
+ 
 </div>
 <!-- /.login-box -->
 
