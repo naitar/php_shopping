@@ -1,29 +1,34 @@
 <?php
-session_start();
-require '../Config/config.php';
-require '../Config/common.php';
+    session_start();
+    require '../Config/config.php';
+    require '../Config/common.php';
 
-if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
-    header('location:login.php');
-}
-
-if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] == 0) {
-        echo  "<script>alert('You are not admin');window.location.href='login.php'</script>";
+    if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) 
+    {
+        header('location:login.php');
     }
-}
 
-require('header.php');
+    if (isset($_SESSION['role']))
+    {
+        if ($_SESSION['role'] == 0) 
+        {
+            echo  "<script>alert('You are not admin');window.location.href='login.php'</script>";
+        }
+    }
 
-if (!empty($_GET['pageno'])) {
+    require('header.php');
 
-    $pageno = $_GET['pageno'];
-} else {
-    $pageno = 1;
-}
+    if (!empty($_GET['pageno'])) 
+    {
+        $pageno = $_GET['pageno'];
+    } 
+    else 
+    {
+        $pageno = 1;
+    }
 
-$numOfrecs  = 3;
-$offset = ($pageno - 1) * $numOfrecs;
+    $numOfrecs  = 3;
+    $offset = ($pageno - 1) * $numOfrecs;
 
     $stmt = $pdo->prepare("SELECT * FROM sale_order_detail  ORDER BY id DESC LIMIT $offset,$numOfrecs ");
     $stmt->execute();
@@ -42,7 +47,6 @@ $offset = ($pageno - 1) * $numOfrecs;
                 <h3 class="card-title">Sale Order Detail</h3>
             </div>
 
-
             <!-- /.card-header -->
             <div class="card-body">
                 <a href="order_list.php" class="btn btn-secondary">Back</a><br /><br />
@@ -58,33 +62,32 @@ $offset = ($pageno - 1) * $numOfrecs;
                     </thead>
                     <tbody>
                         <?php                
-                        if ($result) {
-                            $i = 1;
-                            foreach ($result as $value) {                                                                  
+                            if ($result) 
+                            {
+                                $i = 1;
+                                foreach ($result as $value) 
+                                {                                                                  
+                                    $SO_Stmt = $pdo->prepare("SELECT * FROM sale_orders WHERE id=".$value['sale_order_id']);                            
+                                    $SO_Stmt->execute();
+                                    $SO_Result = $SO_Stmt->fetchAll();                                
 
-                            $SO_Stmt = $pdo->prepare("SELECT * FROM sale_orders WHERE id=".$value['sale_order_id']);                            
-                            $SO_Stmt->execute();
-                            $SO_Result = $SO_Stmt->fetchAll();                                
-
-                            $P_Stmt = $pdo->prepare("SELECT * FROM products WHERE id=".$value['product_id']);                            
-                            $P_Stmt->execute();
-                            $P_Result = $P_Stmt->fetchAll(); 
+                                    $P_Stmt = $pdo->prepare("SELECT * FROM products WHERE id=".$value['product_id']);                            
+                                    $P_Stmt->execute();
+                                    $P_Result = $P_Stmt->fetchAll(); 
                         ?>
-                                <tr>
-                                    <td><?php echo $i; ?></td>
-                                    <td><?php echo escape($P_Result[0]['name']); ?></td>
-                                    <td><?php echo escape($value['quantity']); ?></td>
-                                    <td> <?php echo escape(date("d-m-Y",strtotime($value['order_date']))); ?></td>                                    
-                                </tr>
+                        <tr>
+                            <td><?php echo $i; ?></td>
+                            <td><?php echo escape($P_Result[0]['name']); ?></td>
+                            <td><?php echo escape($value['quantity']); ?></td>
+                            <td> <?php echo escape(date("d-m-Y",strtotime($value['order_date']))); ?></td>                                    
+                        </tr>
                         <?php
                                 $i++;
+                                }
                             }
-                        }
                         ?>
-
                     </tbody>
                 </table>
-
             </div>
             <!-- /.card-body -->
             <div class="card-footer clearfix">
@@ -92,14 +95,9 @@ $offset = ($pageno - 1) * $numOfrecs;
                     <li class="page-item">
                         <a class="page-link" href="?pageno=1">First</a>
                     </li>
-                    <li class="page-item  <?php if ($pageno <= 1) {
-                                                echo 'disabled';
-                                            } ?>">
-                        <a class="page-link" href="<?php if ($pageno <= 1) {
-                                                        echo '#';
-                                                    } else {
-                                                        echo "?pageno=" . ($pageno - 1);
-                                                    } ?>">Previous</a>
+                    <li class="page-item  <?php if ($pageno <= 1) {echo 'disabled';} ?>">
+                        <a class="page-link" href="
+                        <?php if ($pageno <= 1) {echo '#';} else {echo "?pageno=" . ($pageno - 1);} ?>">Previous</a>
                     </li>
                     <li class="page-item disabled">
                         <a class="page-link" href="#"><?php echo $pageno; ?> </a>

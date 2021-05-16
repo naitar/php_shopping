@@ -1,40 +1,46 @@
 <?php
-    session_start();
-    require '../Config/config.php';
-    require '../Config/common.php';
+  session_start();
+  require '../Config/config.php';
+  require '../Config/common.php';
+  
+  if($_POST)
+  {
+    if(empty($_POST['email']) || empty($_POST['password']) )
+    {
+      if(empty($_POST['email']))
+      {
+        $emailError = 'Email  is required';
+      }
+      if(empty($_POST['password']))
+      {
+        $passwordError = 'Password  is required';
+      }
+    }
+    else
+    {
+      $email = $_POST['email'];
+      $password = $_POST['password'];
+      $stmt = $pdo -> prepare("SELECT * FROM users where email=:email");
+      $stmt -> bindValue(':email',$email);
+      $stmt -> execute();
+      $user = $stmt -> fetch(PDO::FETCH_ASSOC);
 
-    
-
-    if($_POST){
-      if(empty($_POST['email']) || empty($_POST['password']) ){
-        if(empty($_POST['email'])){
-            $emailError = 'Email  is required';
+      if($user)
+      {
+        if(password_verify($password, $user['password'])) 
+        {            
+          $_SESSION['user_id'] = $user['id'];
+          $_SESSION['name'] = $user['name'];
+          $_SESSION['role'] = $user['role'];
+          $_SESSION['logged_in'] = time();
+      
+          header('location:index.php');
         }
-        if(empty($_POST['password'])){
-            $passwordError = 'Password  is required';
-        }
-      }else{
-        $email = $_POST['email'];
-          $password = $_POST['password'];
-          $stmt = $pdo -> prepare("SELECT * FROM users where email=:email");
-          $stmt -> bindValue(':email',$email);
-          $stmt -> execute();
-          $user = $stmt -> fetch(PDO::FETCH_ASSOC);
-
-           if($user){
-             if(password_verify($password, $user['password'])) {            
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['name'] = $user['name'];
-                $_SESSION['role'] = $user['role'];
-                $_SESSION['logged_in'] = time();
-            
-                header('location:index.php');
-            }
-        
-        }
+       
+      }
         echo "<script>alert('Incorrect email & password')</script>";
-      } 
-    }   
+    } 
+  }   
 ?>
 <!DOCTYPE html>
 <html>

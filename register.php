@@ -38,7 +38,7 @@ if($_POST)
         $name = $_POST['name'];
         $email = $_POST['email'];
         $password = password_hash($_POST['password'],PASSWORD_DEFAULT) ;
-        $phone = $_POST['phone'];
+        $phone = $_POST['phone'];        
         $address = $_POST['address'];
 
         $stmt = $pdo -> prepare("SELECT * FROM users WHERE email = :email");
@@ -57,7 +57,7 @@ if($_POST)
             );
             if($register)
             {
-                echo "<script>alert('Registration Success! You can now LogIn'); window.location.href='login.php';</script>";                
+                echo "<script>alert('Registration Success! You can now LogIn');window.location.href='login.php';</script>";                
             }
         }       
     }   
@@ -105,7 +105,7 @@ if($_POST)
             <nav class="navbar navbar-expand-lg navbar-light main_box">
             <div class="container">
                     <!-- Brand and toggle get grouped for better mobile display -->
-                    <a class="navbar-brand logo_h" href="index.html"><h4>AP Shopping<h4></a>
+                    <a class="navbar-brand logo_h" href="index.php"><h4>AP Shopping<h4></a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="icon-bar"></span>
@@ -138,7 +138,7 @@ if($_POST)
                     <h1>Login/Register</h1>
                     <nav class="d-flex align-items-center">
                         <a href="#">Home<span class="lnr lnr-arrow-right"></span></a>
-                        <a href="login.html">Login/Register</a>
+                        <a href="login.php">Login/Register</a>
                     </nav>
                 </div>
             </div>

@@ -1,0 +1,17 @@
+.page-item.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #dee2e6
+}
+
+li>.page-item.hidden {
+    display: block;
+    display: none;
+    visibility:visible;
+}
+
+li .page-item.hidden{
+    visibility:visible;
+}

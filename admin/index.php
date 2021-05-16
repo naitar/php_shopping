@@ -3,12 +3,15 @@ session_start();
 require '../Config/config.php';
 require '../Config/common.php';
 
-if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
+if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in']))
+{
   header('location:login.php');
 }
 
-if(isset($_SESSION['role'])){
-  if($_SESSION['role'] == 0){    
+if(isset($_SESSION['role']))
+{
+  if($_SESSION['role'] == 0)
+  {    
     echo  "<script>alert('You are not admin');window.location.href='login.php'</script>";
   }
 }
@@ -16,17 +19,20 @@ if(isset($_SESSION['role'])){
 require('header.php');
 // include('header.php');
 
-if (!empty($_GET['pageno'])) {
-
+if (!empty($_GET['pageno'])) 
+{
   $pageno = $_GET['pageno'];
-} else {
+}
+else 
+{
   $pageno = 1;
 }
 
-$numOfrecs  = 5;
+$numOfrecs  = 3;
 $offset = ($pageno - 1) * $numOfrecs;
 
-if (empty($_POST['search'])) {
+if (empty($_POST['search'])) 
+{
   $stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC");
   $stmt->execute();
   $rawResult = $stmt->fetchAll();
@@ -36,7 +42,9 @@ if (empty($_POST['search'])) {
   $stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT $offset,$numOfrecs ");
   $stmt->execute();
   $result = $stmt->fetchAll();
-} else {
+} 
+else 
+{
   $searchkey = $_POST['search'];
   $stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchkey%' ORDER BY id DESC");
   $stmt->execute();

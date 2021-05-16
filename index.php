@@ -1,84 +1,137 @@
-<?php include('header.html') ?>
-				<!-- End Filter Bar -->
-				<!-- Start Best Seller -->
-				<section class="lattest-product-area pb-40 category-list">
-					<div class="row">
-						<!-- single product -->
-						<div class="col-lg-4 col-md-6">
-							<div class="single-product">
-								<img class="img-fluid" src="img/product/p1.jpg" alt="">
-								<div class="product-details">
-									<h6>addidas New Hammer sole
-										for Sports person</h6>
-									<div class="price">
-										<h6>$150.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-									<div class="prd-bottom">
+<?php
+	session_start();
+	require 'Config/config.php';
+	
 
-										<a href="" class="social-info">
-											<span class="ti-bag"></span>
-											<p class="hover-text">add to bag</p>
-										</a>
-										<a href="" class="social-info">
-											<span class="lnr lnr-move"></span>
-											<p class="hover-text">view more</p>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- single product -->
-						<div class="col-lg-4 col-md-6">
-							<div class="single-product">
-								<img class="img-fluid" src="img/product/p2.jpg" alt="">
-								<div class="product-details">
-									<h6>addidas New Hammer sole
-										for Sports person</h6>
-									<div class="price">
-										<h6>$150.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-									<div class="prd-bottom">
+	if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in']))
+	{
+	header('location:login.php');
+	}	
 
-										<a href="" class="social-info">
-											<span class="ti-bag"></span>
-											<p class="hover-text">add to bag</p>
-										</a>
-										<a href="" class="social-info">
-											<span class="lnr lnr-move"></span>
-											<p class="hover-text">view more</p>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- single product -->
-						<div class="col-lg-4 col-md-6">
-							<div class="single-product">
-								<img class="img-fluid" src="img/product/p3.jpg" alt="">
-								<div class="product-details">
-									<h6>addidas New Hammer sole
-										for Sports person</h6>
-									<div class="price">
-										<h6>$150.00</h6>
-										<h6 class="l-through">$210.00</h6>
-									</div>
-									<div class="prd-bottom">
+	if (!empty($_GET['pageno'])) 
+	{
+	$pageno = $_GET['pageno'];
+	}
+	else 
+	{
+	$pageno = 1;
+	}
 
-										<a href="" class="social-info">
-											<span class="ti-bag"></span>
-											<p class="hover-text">add to bag</p>
-										</a>
-										<a href="" class="social-info">
-											<span class="lnr lnr-move"></span>
-											<p class="hover-text">view more</p>
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
+	$numOfrecs  = 3;
+	$offset = ($pageno - 1) * $numOfrecs;
+
+	if (empty($_POST['search'])) 
+	{
+	$stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC");
+	$stmt->execute();
+	$rawResult = $stmt->fetchAll();
+
+	$total_pages = ceil(count($rawResult) / $numOfrecs);
+
+	$stmt = $pdo->prepare("SELECT * FROM products ORDER BY id DESC LIMIT $offset,$numOfrecs ");
+	$stmt->execute();
+	$result = $stmt->fetchAll();
+	} 
+	else 
+	{
+	$searchkey = $_POST['search'];
+	$stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchkey%' ORDER BY id DESC");
+	$stmt->execute();
+	$rawResult = $stmt->fetchAll();
+
+	$total_pages = ceil(count($rawResult) / $numOfrecs);
+
+	$stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE '%$searchkey%' ORDER BY id DESC LIMIT $offset,$numOfrecs ");
+	$stmt->execute();
+	$result = $stmt->fetchAll();
+	}
+
+	include('header.php');
+?>
+		<!-- End Banner Area -->
+		<div class="container">
+			<div class="row">
+	
+				<div class="col-xl-3 col-lg-4 col-md-5">
+					<div class="sidebar-categories">
+						<div class="head">Browse Categories</div>
+						<?php 
+							$catstmt = $pdo->prepare("SELECT * FROM categories order by id DESC");
+							$catstmt->execute();
+							$catresult = $catstmt -> fetchAll();										
+						?>					
+
+						<ul class="main-categories">
+							<li class="main-nav-list">
+								<?php 
+									if($catresult){
+									foreach ($catresult as $key => $value) {?>
+									<a href="#" data-toggle="collapse"><span class="lnr lnr-arrow-right">										
+									</span><?php echo escape($value['name']) ?></a>
+
+								<?php 
+										}
+							 		}
+								?>															
+							</li>				
+						</ul>
 					</div>
-				</section>
-				<!-- End Best Seller -->
+				</div>
+	
+				<div class="col-xl-9 col-lg-8 col-md-7">
+					<!-- Start Filter Bar -->
+					<div class="filter-bar d-flex flex-wrap align-items-center">
+			
+							<ul class="pagination">										
+								<li class="page-item <?php if($pageno <= 1) {echo "disabled";} ?>"> <a href=" <?php if ($pageno <= 1) {echo '#';} else {echo "?pageno=" . ($pageno - 1);} ?> "  class="disabled"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a> </li>
+								<li class="page-item"> <a href="<?php echo "?pageno=".($pageno) ?>" class="active"> <?php echo $pageno; ?> </a> </li>
+								<li class="page-item <?php if(($pageno+1) > $total_pages) {echo 'disabled';} ?>"> <a href="<?php echo "?pageno=".($pageno+1) ?>" class=""> <?php echo $pageno+1 ?> </a> </li>
+								<li class="page-item <?php if(($pageno+2) > $total_pages) {echo 'disabled';} ?>"> <a href="<?php echo "?pageno=".($pageno+2) ?>" class=""> <?php echo $pageno+2 ?> </a> </li>
+								<li class="page-item <?php if(($pageno+3) > $total_pages) {echo 'disabled';} ?>"> <a href="<?php echo "?pageno=".($pageno+3) ?>" class=""> <?php echo $pageno+3 ?> </a> </li>
+								<li class="page-item <?php if(($pageno+4) > $total_pages) {echo 'disabled';} ?>"> <a href="<?php echo "?pageno=".($pageno+4) ?>" class=""> <?php echo $pageno+4 ?> </a> </li>
+								<li class="page-item <?php if ($pageno >= $total_pages) {echo 'disabled';} ?>"> <a href=" <?php if ($pageno >= $total_pages) {echo '#';} else {echo "?pageno=" . ($pageno + 1);} ?> " class=" disabled"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a> </li>							
+							</ul>				 
+							
+			</div>
+
+
+		<!-- End Filter Bar -->
+		<!-- Start Best Seller -->
+			<section class="lattest-product-area pb-40 category-list">
+				<div class="row">
+					<!-- single product -->					
+					<?php
+						if($result){
+							foreach($result as $value){?>
+							<div class="col-lg-4 col-md-6">
+								<div class="single-product">							
+									<img class="img-fluid" src="admin/images/<?php echo escape($value['image']) ?>" alt="image" style="height: 220px;">
+										<div class="product-details">
+											<h6><?php echo escape($value['name']) ?></h6>
+											<div class="price">
+												<h6><?php echo escape($value['price']) ?></h6>
+												<!-- <h6 class="l-through">$51447</h6> -->
+											</div>
+											<div class="prd-bottom">
+
+												<a href="" class="social-info">
+													<span class="ti-bag"></span>
+													<p class="hover-text">add to bag</p>
+												</a>
+												<a href="" class="social-info">
+													<span class="lnr lnr-move"></span>
+													<p class="hover-text">view more</p>
+												</a>
+											</div>
+										</div>
+
+								</div>
+							</div>
+					<?php	}
+						}
+					?>										
+				</div>
+		</div>
+	</section>
+	<!-- End Best Seller -->
 <?php include('footer.php');?>
