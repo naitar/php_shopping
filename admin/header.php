@@ -16,13 +16,17 @@
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <!-- for DataTable -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> 
+
+
 </head>
 
 <body class="hold-transition sidebar-mini">
   <div class="wrapper">
 
     <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <nav class="main-header navbar navbar-expand navbar-white  navbar-light">
       <!-- Left navbar links -->
       <ul class="navbar-nav">
         <li class="nav-item">
@@ -52,7 +56,8 @@
       <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
       <?php
         // check search box show or hide;
-        if($page == 'order_list.php' || $page == 'order_detail.php'){
+        if($page == 'order_list.php' || $page == 'order_detail.php' || $page == 'weekly_report.php' ||
+            $page == 'monthly_report.php' || $page == 'best_seller_item.php' || $page == 'royal_user.php'){
 
         }
         else{ ?>
@@ -127,6 +132,41 @@
                 <i class="nav-icon fa fa-table"></i>
                 <p>Order</p>
               </a>
+            </li>
+            <li class="nav-item has-treeview menu">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Reports
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="weekly_report.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Weekly Report</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="monthly_report.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Monthly Report</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="royal_user.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Royal Customers</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="best_seller_item.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Best Seller Items</p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
           </ul>
