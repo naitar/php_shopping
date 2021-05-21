@@ -15,15 +15,6 @@ if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
 
 if($_POST)
 {
-    // echo "Post";
-    // echo    $_POST['name'];
-    // echo    $_POST['description'];
-    // echo    $_POST['category'];
-    // echo    $_POST['quantity'];
-    // echo    $_POST['price'];
-    
-    // exit();
-
     if(empty($_POST['name']) || empty($_POST['description']) || empty($_POST['category']) || empty($_POST['quantity'])
     || empty($_POST['price']) || empty($_FILES['image']['name']))
     {
@@ -88,7 +79,7 @@ if($_POST)
                 array(':name'=>$name,':description'=>$description,':category'=>$category,':quantity'=>$quantity,':price'=>$price,':image'=>$image)                
             );
 
-            print_r($result);
+            // print_r($result);
 
             if ($result)
             {                                
@@ -112,22 +103,24 @@ if($_POST)
             <!-- /.card-header -->
             <div class="card-body">
                 <form action="product_add.php" method="POST" enctype="multipart/form-data">
-                <input name="_token" type="hidden" value="<?php echo escape($_SESSION['_token']); ?>">
+                    <input name="_token" type="hidden" value="<?php echo escape($_SESSION['_token']); ?>">
                     <div class="form-group">
                         <label for="name" name="name"> name</label>
                         <p style="color:red;display:inline;"><?php echo empty($nameError) ? '' : '*'.$nameError ?></p>
-                        <input type="text" class="form-control" name="name" >
+                        <input type="text" class="form-control" name="name">
                     </div>
 
                     <div class="form-group">
                         <label for="content" name="description"> Description</label>
-                        <p style="color:red;display:inline;"><?php echo empty($descError) ? '' : '*'.$descError ?></p><br>
-                        <textarea class="form-control" name="description" id="" cols="80" rows="8" ></textarea>    
+                        <p style="color:red;display:inline;"><?php echo empty($descError) ? '' : '*'.$descError ?></p>
+                        <br>
+                        <textarea class="form-control" name="description" id="" cols="80" rows="8"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="content" name="Category">Select Category</label>
-                        <p style="color:red;display:inline;"><?php echo empty($descError) ? '' : '*'.$descError ?></p><br>
+                        <p style="color:red;display:inline;"><?php echo empty($descError) ? '' : '*'.$descError ?></p>
+                        <br>
                         <select class="form-control" name="category" id="">
                             <option value="">SELECT</option>
                             <?php 
@@ -136,30 +129,32 @@ if($_POST)
                               $catResult = $stmt->fetchAll();
 
                               foreach ($catResult as $value) 
-                              {  ?>  
-                                <option value = '<?php echo $value['id']; ?>'> <?php echo $value['name']; ?> </option>    
-                              <?php
+                              {  ?>
+                            <option value='<?php echo $value['id']; ?>'> <?php echo $value['name']; ?> </option>
+                            <?php
                               }                                                                                                                  
-                            ?>                                                        
+                            ?>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="content" name="quantity"> Quantity</label>
-                        <p style="color:red;display:inline;"><?php echo empty($qtyError) ? '' : '*'.$qtyError ?></p><br>                        
-                        <input type="number" class="form-control" name="quantity" value="" >
+                        <p style="color:red;display:inline;"><?php echo empty($qtyError) ? '' : '*'.$qtyError ?></p><br>
+                        <input type="number" class="form-control" name="quantity" value="">
                     </div>
 
                     <div class="form-group">
                         <label for="content" name="price"> Price </label>
-                        <p style="color:red;display:inline;"><?php echo empty($priceError) ? '' : '*'.$priceError ?></p><br>
-                        <input type="number" class="form-control" name="price" value="" >
+                        <p style="color:red;display:inline;"><?php echo empty($priceError) ? '' : '*'.$priceError ?></p>
+                        <br>
+                        <input type="number" class="form-control" name="price" value="">
                     </div>
 
                     <div class="form-group">
                         <label for="content" name="image"> Image </label>
-                        <p style="color:red;display:inline;"><?php echo empty($imageError) ? '' : '*'.$imageError ?></p><br>
-                        <input type="file"  name="image" id="image" >
+                        <p style="color:red;display:inline;"><?php echo empty($imageError) ? '' : '*'.$imageError ?></p>
+                        <br>
+                        <input type="file" name="image" id="image">
                     </div>
 
                     <div class="form-goup">

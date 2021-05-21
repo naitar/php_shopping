@@ -47,7 +47,7 @@
     $pageno = 1;
   }
 
-  $numOfrecs  = 2;
+  $numOfrecs  = 5;
   $offset = ($pageno - 1) * $numOfrecs;
 
   if(empty($_POST['search']) && empty($_COOKIE['search']))
@@ -76,9 +76,6 @@
     $stmt->execute();
     $result = $stmt->fetchAll();
   }
-
-
-
 
   require('header.php');
 
