@@ -3,10 +3,6 @@
 	require 'Config/config.php';
 	
 
-	if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in']))
-	{
-		header('location:login.php');
-	}	
 
 	if (!empty($_GET['pageno'])) 
 	{
@@ -17,7 +13,7 @@
 		$pageno = 1;
 	}
 
-	$numOfrecs  = 2;
+	$numOfrecs  = 3;
 	$offset = ($pageno - 1) * $numOfrecs;
 
 	if(isset($_POST['search']))

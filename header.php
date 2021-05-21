@@ -1,5 +1,5 @@
 <?php
-require 'Config/common.php';
+    require 'Config/common.php';
 ?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
@@ -18,7 +18,7 @@ require 'Config/common.php';
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Site Title -->
-    <title>Karma Shop</title>
+    <title>Sophia Store</title>
 
     <!--
             CSS
@@ -43,7 +43,7 @@ require 'Config/common.php';
                 <div class="container">
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <a class="navbar-brand logo_h" href="index.php">
-                        <h4>AP Shopping<h4>
+                        <h4>Sophia Store<h4>
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -65,7 +65,7 @@ require 'Config/common.php';
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item"><a href="cart.php" class="cart"><span class="ti-bag "><?php echo escape($cart) ?></span></a></li>
+                            <li class="nav-item"><a href="cart.php" class="cart"><span class="ti-bag "><?php echo escape($cart == 0 ? "":"$cart");?></span></a></li>
                             <li class="nav-item">
                                 <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                             </li>
@@ -92,8 +92,12 @@ require 'Config/common.php';
         <div class="container">
             <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
                 <div class="col-first">
-                    <h1>Welcome</h1>
-
+                    <!-- <?php print_r($_SESSION); ?> -->
+                    
+                    <h1>Welcome &nbsp;&nbsp;                                            
+                        <?php echo empty($_SESSION['name']) ? '' : $_SESSION['name']."<a href='logout.php'> &nbsp;&nbsp; <span class='ti-power-off' style='color : #fff'></span></a>   "  ;?>
+                        
+                     </h1>
                 </div>
             </div>
         </div>
