@@ -1,53 +1,40 @@
 <?php
-session_start();
-require '../Config/config.php';
-require '../Config/common.php';
+    session_start();
+    require '../Config/config.php';
+    require '../Config/common.php';
 
-if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
-    header('location:login.php');
-}
-
-if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] == 0) {
-        echo  "<script>alert('You are not admin');window.location.href='login.php'</script>";
+    if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
+        header('location:login.php');
     }
-}
 
-require('header.php');
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] == 0) {
+            echo  "<script>alert('You are not admin');window.location.href='login.php'</script>";
+        }
+    }
 
-if (!empty($_GET['pageno'])) {
+    require('header.php');
 
-    $pageno = $_GET['pageno'];
-} else {
-    $pageno = 1;
-}
+    if (!empty($_GET['pageno'])) {
 
-$numOfrecs  = 3;
-$offset = ($pageno - 1) * $numOfrecs;
+        $pageno = $_GET['pageno'];
+    } else {
+        $pageno = 1;
+    }
 
-// if (empty($_POST['search'])) {
-//     $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id DESC");
-//     $stmt->execute();
-//     $rawResult = $stmt->fetchAll();
+    $numOfrecs  = 5;
+    $offset = ($pageno - 1) * $numOfrecs;
 
-//     $total_pages = ceil(count($rawResult) / $numOfrecs);
+    $stmt = $pdo->prepare("SELECT * FROM sale_orders ORDER BY id DESC");
+    $stmt->execute();
+    $rawResult = $stmt->fetchAll();
 
-//     $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id DESC LIMIT $offset,$numOfrecs ");
-//     $stmt->execute();
-//     $result = $stmt->fetchAll();
-// } else {
-//     $searchkey = $_POST['search'];
-//     $stmt = $pdo->prepare("SELECT * FROM categories WHERE name LIKE '%$searchkey%' ORDER BY id DESC");
-//     $stmt->execute();
-//     $rawResult = $stmt->fetchAll();
-
-    // $total_pages = ceil(count($rawResult) / $numOfrecs);
-
+    $total_pages = ceil(count($rawResult) / $numOfrecs);
+      
     $stmt = $pdo->prepare("SELECT * FROM sale_orders  ORDER BY id DESC LIMIT $offset,$numOfrecs ");
     $stmt->execute();
     $result = $stmt->fetchAll();
 
-    $total_pages = ceil(count($result) / $numOfrecs);
 // }
 
 ?>

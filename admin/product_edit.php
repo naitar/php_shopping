@@ -53,62 +53,73 @@ if($_POST)
 
     }
     else
-    {        
-        if($_FILES['image']['name'] != null)  //check image upload
+    {   
+        if(is_numeric($_POST['quantity']) != 1)
         {
-            $file = 'images/'.($_FILES['image']['name']);
-            $imageType = pathinfo($file, PATHINFO_EXTENSION);
+            $qtyError = "Quantity should be integer value";
+        }
+        if(is_numeric($_POST['price']) != 1)
+        {
+            $priceError = "Price should be integer value";
+        }
+        if($qtyError == null && $priceError == null)
+        {
+            if($_FILES['image']['name'] != null)  //check image upload
+            {
+                $file = 'images/'.($_FILES['image']['name']);
+                $imageType = pathinfo($file, PATHINFO_EXTENSION);
 
-            if($imageType != 'jpg' && $imageType != 'jpeg' && $imageType != 'png')
-            {
-                echo "<script> alert('Image should be jpg, jpeg, png'); </script>";
+                if($imageType != 'jpg' && $imageType != 'jpeg' && $imageType != 'png')
+                {
+                    echo "<script> alert('Image should be jpg, jpeg, png'); </script>";
+                }
+                else  //image validation success;
+                {
+                    $id = $_POST['id'];
+                    $name = $_POST['name'];            
+                    $description = $_POST['description'];
+                    $category = $_POST['category'];
+                    $quantity = $_POST['quantity'];
+                    $price = $_POST['price'];            
+                    $image = $_FILES['image']['name'];
+
+                    move_uploaded_file($_FILES['image']['tmp_name'], $file);
+                
+                    $stmt = $pdo -> prepare("UPDATE products SET name = :name, description = :description, category_id = :category, quantity = :quantity, price = :price, image = :image WHERE id ='$id'");             
+              
+                    $result = $stmt ->execute(
+                        array(':name'=>$name,':description'=>$description,':category'=>$category,':quantity'=>$quantity,':price'=>$price, ':image'=> $image)
+                    );
+
+                    if ($result)
+                    {                                
+                        echo "<script> alert('Product is updated successful.'); window.location.href='index.php';</script>";
+                    } 
+                } 
+
             }
-            else  //image validation success;
+            else
             {
-                $id = $_POST['id'];
+                $id = $_POST['id'];   
                 $name = $_POST['name'];            
                 $description = $_POST['description'];
                 $category = $_POST['category'];
                 $quantity = $_POST['quantity'];
-                $price = $_POST['price'];            
-                $image = $_FILES['image']['name'];
+                $price = $_POST['price'];                       
+      
+                $stmt = $pdo -> prepare("UPDATE products SET name = :name, description = :description, category_id = :category, quantity = :quantity, price = :price  WHERE id='$id'");
 
-                move_uploaded_file($_FILES['image']['tmp_name'], $file);
-                
-                $stmt = $pdo -> prepare("UPDATE products SET name = :name, description = :description, category_id = :category, quantity = :quantity, price = :price, image = :image WHERE id ='$id'");             
-              
                 $result = $stmt ->execute(
-                    array(':name'=>$name,':description'=>$description,':category'=>$category,':quantity'=>$quantity,':price'=>$price, ':image'=> $image)
+                    array(':name'=>$name,':description'=>$description,':category'=>$category,':quantity'=>$quantity,':price'=>$price)
                 );
 
                 if ($result)
                 {                                
                     echo "<script> alert('Product is updated successful.'); window.location.href='index.php';</script>";
                 } 
-            } 
-
-        }
-        else
-        {
-            $id = $_POST['id'];   
-            $name = $_POST['name'];            
-            $description = $_POST['description'];
-            $category = $_POST['category'];
-            $quantity = $_POST['quantity'];
-            $price = $_POST['price'];                       
-      
-            $stmt = $pdo -> prepare("UPDATE products SET name = :name, description = :description, category_id = :category, quantity = :quantity, price = :price  WHERE id='$id'");
-
-            $result = $stmt ->execute(
-                array(':name'=>$name,':description'=>$description,':category'=>$category,':quantity'=>$quantity,':price'=>$price)
-            );
-
-            if ($result)
-            {                                
-                echo "<script> alert('Product is updated successful.'); window.location.href='index.php';</script>";
-            } 
              
-        }   
+            }  
+        }      
     }
 }
 
